@@ -22,6 +22,7 @@ def optimize_asm(source, target, env):
         " ".join([
             "stm8dce",
             "-o",
+            # could also add more --opt-irq, -e, -xf, -xc options here
             "\"" + temp_out_dir + "\""
             ] + ["\"" + x + "\"" for x in asm_files]
         )
