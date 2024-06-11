@@ -1,11 +1,14 @@
 name: PlatformIO CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -19,10 +22,10 @@ jobs:
           python-version: '3.11'
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
-      - name: Install STM8-DCE
+      - name: Install STM8-DCE (v1.0.2)
         run: |
           python3 -m pip install build
-          git clone https://github.com/CTXz/STM8-DCE.git
+          git clone https://github.com/CTXz/STM8-DCE.git#1.0.2
           cd STM8-DCE
           python3 -m build .
           pip install .
