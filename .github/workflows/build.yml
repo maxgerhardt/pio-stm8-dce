@@ -25,7 +25,7 @@ jobs:
       - name: Install STM8-DCE (v1.0.2)
         run: |
           python3 -m pip install build
-          git clone https://github.com/CTXz/STM8-DCE.git#1.0.2
+          git clone -b "1.0.2" https://github.com/CTXz/STM8-DCE.git
           cd STM8-DCE
           python3 -m build .
           pip install .
