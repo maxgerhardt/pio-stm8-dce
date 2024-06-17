@@ -29,7 +29,7 @@ def optimize_asm(source, target, env):
   
     for x in source:
         tmp_path=os.path.join(temp_out_dir,os.path.splitext(os.path.basename(str(x)))[0]+".asm")
-        env.Execute("$AS" + " -plosg -ff -o " + str(x) + " " +tmp_path )
+        env.Execute("$AS -plosg -ff -o " + str(x) + " " +tmp_path )
         os.remove(tmp_path)
 
     os.rmdir(temp_out_dir)
