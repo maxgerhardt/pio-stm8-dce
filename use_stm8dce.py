@@ -18,8 +18,8 @@ def optimize_asm(source, target, env):
     env.GetProjectOption("stm8dce_flags", default="")   +
     (" -v " if int(ARGUMENTS.get("PIOVERBOSE", 0)) else "") +
     " -o " + 
-    '"' + temp_out_dir +  '"' +
-    ' "'+
+    '"' + temp_out_dir +  
+    '" "'+
     '" "'.join( [os.path.splitext(str(x))[0]+".asm"   for x in source])+ '"' )    
   
     for x in source:
