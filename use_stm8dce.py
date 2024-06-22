@@ -16,6 +16,7 @@ def optimize_asm(source, target, env):
 
     env.Execute("stm8dce "  + 
     env.GetProjectOption("stm8dce_flags", default="")   +
+    (" -v " if int(ARGUMENTS.get("PIOVERBOSE", 0)) else "") +
     " -o " + 
     '"' + temp_out_dir +  '"' +
     ' "'+
