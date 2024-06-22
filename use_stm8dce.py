@@ -15,17 +15,17 @@ def optimize_asm(source, target, env):
         os.mkdir(temp_out_dir)
 
     env.Execute("stm8dce "  + 
-                    env.GetProjectOption("stm8dce_flags", default="")   +
-                    " -o " + 
-                    '"' + temp_out_dir +  '"' +
-                      ' "'+
-                      '" "'.join( [os.path.splitext(str(x))[0]+".asm"   for x in source])+ '"' )    
-        
+    env.GetProjectOption("stm8dce_flags", default="")   +
+    " -o " + 
+    '"' + temp_out_dir +  '"' +
+    ' "'+
+    '" "'.join( [os.path.splitext(str(x))[0]+".asm"   for x in source])+ '"' )    
+  
     for x in source:
-            tmp_path= os.path.join(temp_out_dir,os.path.splitext(os.path.basename(str(x)))[0]+".asm") 
-            env.Execute("$AS -plosg -ff -o " + '"' +str(x) +'" "' +tmp_path+'"' )
-            os.remove(tmp_path)
-    
+        tmp_path= os.path.join(temp_out_dir,os.path.splitext(os.path.basename(str(x)))[0]+".asm") 
+        env.Execute("$AS -plosg -ff -o " + '"' +str(x) +'" "' +tmp_path+'"' )
+        os.remove(tmp_path)
+
     os.rmdir(temp_out_dir)
 
 env.AddPreAction("$BUILD_DIR/${PROGNAME}.elf", optimize_asm)
