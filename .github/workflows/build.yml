@@ -22,10 +22,10 @@ jobs:
           python-version: '3.11'
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
-      - name: Install STM8-DCE (v1.0.2)
+      - name: Install STM8-DCE (v1.1.1)
         run: |
           python3 -m pip install build
-          git clone -b "1.0.2" https://github.com/CTXz/STM8-DCE.git
+          git clone -b "1.1.1" https://github.com/CTXz/STM8-DCE.git
           cd STM8-DCE
           python3 -m build .
           pip install .
