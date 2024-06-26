@@ -15,7 +15,7 @@ if missing:
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade","pip"])
         subprocess.check_call([sys.executable, "-m", "pip", "install", "stm8dce>=1.1.1"])
-    finally:
+    except:
          sys.stderr.write("stm8dce tool not found, install it via https://github.com/CTXz/STM8-DCE")
          env.Exit(-1)
 
