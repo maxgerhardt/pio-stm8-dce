@@ -5,11 +5,15 @@ import subprocess
 import pkg_resources
 Import("env")
 
-missing = {"stm8dce"} - {f"{pkg.key}" for pkg in pkg_resources.working_set}
+missing=True
 
+for pkg in pkg_resources.working_set:
+    if pkg.key=="stm8dce" and pkg.version>="1.1.1":
+        missing=False
+        
 if missing:
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "stm8dce>=1.1.1"])
     finally:
          sys.stderr.write("stm8dce tool not found, install it via https://github.com/CTXz/STM8-DCE")
          env.Exit(-1)
