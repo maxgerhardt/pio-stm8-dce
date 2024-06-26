@@ -44,7 +44,8 @@ def optimize_asm(source, target, env):
         if  os.path.isfile(tmp_path):
             env.Execute(env.VerboseAction("$AS -plosg -ff -o " + '"' +str(x) +'" "' +tmp_path+'"',"COMPILING "+str(x) ))
             os.remove(tmp_path)
-
-    os.rmdir(temp_out_dir)
+            
+    if not os.listdir(temp_out_dir):
+        os.rmdir(temp_out_dir)
 
 env.AddPreAction("$BUILD_DIR/${PROGNAME}.elf", env.VerboseAction(optimize_asm,"EXTRA SCRIPT"))
