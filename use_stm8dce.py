@@ -48,7 +48,7 @@ def optimize_asm(source, target, env):
     for x in source:
         tmp_path= os.path.join(temp_out_dir,os.path.splitext(os.path.basename(str(x)))[0]+".asm") 
         if  os.path.isfile(tmp_path):
-            env.Execute(env.VerboseAction("$AS -plosg -ff -o " + '"' +str(x) +'" "' +tmp_path+'"',"RECOMPILING "+str(x) ))
+            env.Execute(env.VerboseAction("$AS -plosg -ff -o " + '"' +str(x) +'" "' +tmp_path+'"',"COMPILATION "+str(x) ))
 
 
 env.AddPreAction("$BUILD_DIR/${PROGNAME}.elf", env.VerboseAction(optimize_asm,"EXTRA SCRIPT"))
