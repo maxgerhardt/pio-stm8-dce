@@ -25,7 +25,7 @@ def optimize_asm(source, target, env):
     
     if not os.path.isdir(temp_out_dir):
         os.mkdir(temp_out_dir)
-
+        
     asm_path=""
     
     for x in source:
