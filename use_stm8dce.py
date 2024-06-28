@@ -21,7 +21,7 @@ if missing:
         
 def optimize_asm(source, target, env):
     
-    temp_out_dir = os.path.join(env.subst("$BUILD_DIR"), "optim_output")
+    temp_out_dir = os.path.join(env.subst("$BUILD_DIR"), "stm8dce_output")
     
     if not os.path.isdir(temp_out_dir):
         os.mkdir(temp_out_dir)
