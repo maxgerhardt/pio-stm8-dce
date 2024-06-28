@@ -31,7 +31,7 @@ def optimize_asm(source, target, env):
     for x in source:
       tst_asm_pth= os.path.splitext(str(x))[0]+".asm"  
       if  os.path.isfile(tst_asm_pth):
-        asm_path += ' "' + tst_asm_pth +'"'
+        asm_path +=' "'+tst_asm_pth +'"'
           
     env.Execute(env.VerboseAction("stm8dce "  + 
     " -o "  + 
