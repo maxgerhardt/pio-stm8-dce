@@ -2,7 +2,6 @@ import os
 import subprocess
 import sys
 import pkg_resources
-
 Import("env")
 
 missing = True
@@ -33,11 +32,17 @@ def optimize_asm(source, target, env):
     os.makedirs(temp_out_dir, exist_ok=True)
 
     asm_path = ""
+    run_flag = False
 
     for x in source:
+        if x.state == 4:
+            run_flag = True
         tst_asm_pth = os.path.splitext(str(x))[0] + ".asm"
         if os.path.isfile(tst_asm_pth):
             asm_path += ' "' + tst_asm_pth + '"'
+
+    if not run_flag:
+        return
 
     env.Execute(
         env.VerboseAction(
@@ -57,18 +62,19 @@ def optimize_asm(source, target, env):
     )
 
     for x in source:
-        tmp_path = os.path.join(
-            temp_out_dir, os.path.splitext(
-                os.path.basename(str(x)))[0] + ".asm"
-        )
-        if os.path.isfile(tmp_path):
-            env.Execute(
-                env.VerboseAction(
-                    "$AS -plosg -ff -o " + '"' +
-                    str(x) + '" "' + tmp_path + '"',
-                    "COMPILING " + str(x),
-                )
+        if x.state == 4:
+            tmp_path = os.path.join(
+                temp_out_dir, os.path.splitext(
+                    os.path.basename(str(x)))[0] + ".asm"
             )
+            if os.path.isfile(tmp_path):
+                env.Execute(
+                    env.VerboseAction(
+                        "$AS -plosg -ff -o " + '"' +
+                        str(x) + '" "' + tmp_path + '"',
+                        "COMPILING " + str(x),
+                    )
+                )
 
 
 env.AddPreAction(
