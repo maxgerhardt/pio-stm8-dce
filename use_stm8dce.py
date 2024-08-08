@@ -83,12 +83,12 @@ def optimize_asm(source, target, env):
     )
 
     for x, asm_pt, hs_old in zip(source, stm8dce_fold_asm, asm_hash_old):
-        tst_hs = sha256sum(str(asm_pt))
-        if tst_hs != str(hs_old) and len(tst_hs):
+        tst_hs = sha256sum(asm_pt)
+        if tst_hs != hs_old and len(tst_hs):
             env.Execute(
                 env.VerboseAction(
                     "$AS -plosg -ff -o " + '"' +
-                    str(x) + '" "' + str(asm_pt) + '"',
+                    str(x) + '" "' + asm_pt + '"',
                     "COMPILING " + str(x),
                 )
             )
