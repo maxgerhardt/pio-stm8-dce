@@ -29,9 +29,6 @@ if missing:
 
 
 def sha256sum(filename):
-    if not os.path.isfile(filename):
-        return ""
-
     h = hashlib.sha256()
     b = bytearray(128 * 1024)
     mv = memoryview(b)
@@ -57,7 +54,10 @@ def optimize_asm(source, target, env):
                 os.path.basename(str(x)))[0] + ".asm"
         )
 
-        asm_hash_old.append(sha256sum(tst_asm_pth))
+        if os.path.isfile(tst_asm_pth):
+            asm_hash_old.append(sha256sum(tst_asm_pth))
+        else:
+            asm_hash_old.append("")
 
         stm8dce_fold_asm.append(tst_asm_pth)
 
@@ -83,8 +83,12 @@ def optimize_asm(source, target, env):
     )
 
     for x, asm_pt, hs_old in zip(source, stm8dce_fold_asm, asm_hash_old):
-        tst_hs = sha256sum(asm_pt)
-        if tst_hs != hs_old and len(tst_hs):
+
+        if os.path.isfile(asm_pt):
+            if hs_old:
+                if sha256sum(asm_pt) == hs_old:
+                    continue
+
             env.Execute(
                 env.VerboseAction(
                     "$AS -plosg -ff -o " + '"' +
