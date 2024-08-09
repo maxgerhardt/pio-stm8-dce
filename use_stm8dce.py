@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import pkg_resources
+import hashlib
 
 Import("env")
 
@@ -27,14 +28,39 @@ if missing:
         env.Exit(-1)
 
 
+def sha256sum(filename):
+    h = hashlib.sha256()
+    b = bytearray(128 * 1024)
+    mv = memoryview(b)
+    with open(filename, "rb", buffering=0) as f:
+        for n in iter(lambda: f.readinto(mv), 0):
+            h.update(mv[:n])
+    return h.hexdigest()
+
+
 def optimize_asm(source, target, env):
 
     temp_out_dir = os.path.join(env.subst("$BUILD_DIR"), "stm8dce_output")
     os.makedirs(temp_out_dir, exist_ok=True)
 
     asm_path = ""
+    stm8dce_fold_asm = []
+    asm_hash_old = []
 
     for x in source:
+
+        tst_asm_pth = os.path.join(
+            temp_out_dir, os.path.splitext(
+                os.path.basename(str(x)))[0] + ".asm"
+        )
+
+        if os.path.isfile(tst_asm_pth):
+            asm_hash_old.append(sha256sum(tst_asm_pth))
+        else:
+            asm_hash_old.append("")
+
+        stm8dce_fold_asm.append(tst_asm_pth)
+
         tst_asm_pth = os.path.splitext(str(x))[0] + ".asm"
         if os.path.isfile(tst_asm_pth):
             asm_path += ' "' + tst_asm_pth + '"'
@@ -56,16 +82,17 @@ def optimize_asm(source, target, env):
         )
     )
 
-    for x in source:
-        tmp_path = os.path.join(
-            temp_out_dir, os.path.splitext(
-                os.path.basename(str(x)))[0] + ".asm"
-        )
-        if os.path.isfile(tmp_path):
+    for x, asm_pt, hs_old in zip(source, stm8dce_fold_asm, asm_hash_old):
+
+        if os.path.isfile(asm_pt):
+            if hs_old:
+                if sha256sum(asm_pt) == hs_old:
+                    continue
+
             env.Execute(
                 env.VerboseAction(
                     "$AS -plosg -ff -o " + '"' +
-                    str(x) + '" "' + tmp_path + '"',
+                    str(x) + '" "' + asm_pt + '"',
                     "COMPILING " + str(x),
                 )
             )
